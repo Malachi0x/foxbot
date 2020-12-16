@@ -12,7 +12,7 @@ const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith(
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
 
-  client.command.set(command.name, command)
+  client.commands.set(command.name, command)
 }
 // bot variables
 const prefix = '.' || ';';
