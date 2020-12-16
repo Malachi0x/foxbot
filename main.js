@@ -1,20 +1,27 @@
 /*
  *  Copyright 2020 Malachi Miller (Foxbyte)
  */
-
-// discord variables
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-// bot variables
-const prefix = ';';
-const faceEmojis = ['😀','😁','😂','🤣','😃','😄','😅','😆','😉','😊','😋','😎','😍','😘','🥰',
-                '😗','😙','😚','🙂','🤗','🤩','🤔','🤨','🤨','😐','😑','😶','🙄','😏','😣',
-                '😥','😮','🤐','😯','😪','😫','🥱','😴','😌','😛','😜','😝','🤤','😒','😓',
-                '😔','😕','🙃','🤑','😲','🙁','😖','😞','😟','😤','😢','😭','😦','😧','😨',
-                '😩','🤯','😬','😰','😱','🥵','🥶','😳','🤪','😵','🥴','😠','😡','😷','🤒',
-                '🤕','🤢','🤮','🤧','😇','🥳','🥺','🤠','🤡','🤥','🤫','🤭','🧐','🤓'];
+const fs = require('fs');
 
+client.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+  const command = require(`./commands/${file}`);
+
+  client.command.set(command.name, command)
+}
+// bot variables
+const prefix = '.' || ';';
+// const faceEmojis = ['😀','😁','😂','🤣','😃','😄','😅','😆','😉','😊','😋','😎','😍','😘','🥰',
+//                 '😗','😙','😚','🙂','🤗','🤩','🤔','🤨','🤨','😐','😑','😶','🙄','😏','😣',
+//                 '😥','😮','🤐','😯','😪','😫','🥱','😴','😌','😛','😜','😝','🤤','😒','😓',
+//                 '😔','😕','🙃','🤑','😲','🙁','😖','😞','😟','😤','😢','😭','😦','😧','😨',
+//                 '😩','🤯','😬','😰','😱','🥵','🥶','😳','🤪','😵','🥴','😠','😡','😷','🤒',
+//                 '🤕','🤢','🤮','🤧','😇','🥳','🥺','🤠','🤡','🤥','🤫','🤭','🧐','🤓'];
 
 client.once('ready', () => {
     console.log('Foxbot activated (online / updated)');
@@ -22,21 +29,12 @@ client.once('ready', () => {
 
 client.on('message', message =>{
     if(!message.content.startsWith(prefix) || message.author.bot) return;
+      const args = message.content.slice(prefix.length).split(/ +/);
+      const command = args.shift().toLowerCase();
 
-    const args = message.content.slice(prefix.length).split(/ +/);
-    const command = args.shift().toLowerCase();
-
-    if(command === 'ping') { 
-        message.channel.send('pong!');
-    } else if (command === 'sad') {
-        message.channel.send('Your awesome your made me! :)')
-    } else if (command === 'emojis') {
-        message.channel.send(faceEmojis)
-    } else if (command === 'randomemoji') {
-        message.channel.send(faceEmojis[Math.random(0, 89)])
-    } else if (command === 'help') {
-        message.channel.send('prefix is ; | commands: ping, sad, emojis, randomemoji')
-    }
+      if(command === 'ping') {
+          client.command.get('ping').execute(message, args)
+      }
 });
 
 client.login(process.env.token);
