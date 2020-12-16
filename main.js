@@ -1,0 +1,38 @@
+/*
+ *  Copyright 2020 Malachi Miller (Foxbyte)
+ */
+
+// discord variables
+const Discord = require('discord.js');
+const client = new Discord.Client();
+
+// bot variables
+const prefix = ';';
+const faceEmojis = ['😀','😁','😂','🤣','😃','😄','😅','😆','😉','😊','😋','😎','😍','😘','🥰',
+                '😗','😙','😚','🙂','🤗','🤩','🤔','🤨','🤨','😐','😑','😶','🙄','😏','😣',
+                '😥','😮','🤐','😯','😪','😫','🥱','😴','😌','😛','😜','😝','🤤','😒','😓',
+                '😔','😕','🙃','🤑','😲','🙁','😖','😞','😟','😤','😢','😭','😦','😧','😨',
+                '😩','🤯','😬','😰','😱','🥵','🥶','😳','🤪','😵','🥴','😠','😡','😷','🤒',
+                '🤕','🤢','🤮','🤧','😇','🥳','🥺','🤠','🤡','🤥','🤫','🤭','🧐','🤓'];
+
+
+client.once('ready', () => {
+    console.log('Foxbot activated (online / updated)');
+});
+
+client.on('message', message =>{
+    if(!message.content.startsWith(prefix) || message.author.bot) return;
+
+    const args = message.content.slice(prefix.length).split(/ +/);
+    const command = args.shift().toLowerCase();
+
+    if(command === 'ping') { 
+        message.channel.send('pong!');
+    } else if (command === 'sad') {
+        message.channel.send('Your awesome your made me! :)')
+    } else if (command === 'emojis') {
+        message.channel.send(faceEmojis)
+    }
+});
+
+client.login(process.env.token);
