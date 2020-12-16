@@ -32,6 +32,10 @@ client.on('message', message =>{
         message.channel.send('Your awesome your made me! :)')
     } else if (command === 'emojis') {
         message.channel.send(faceEmojis)
+    } else if (command === 'randomemoji') {
+        message.channel.send(faceEmojis[Math.random(0, 89)])
+    } else if (command === 'help') {
+        message.channel.send('prefix is ; | commands: ping, sad, emojis, randomemoji')
     }
 });
 
